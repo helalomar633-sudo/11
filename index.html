@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الانضمام | BurnUp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #050505; /* أسود أعمق */
+            color: #ffffff; 
+        }
+        
+        /* التدرج الأصفر الغامق (الذهبي) */
+        .gold-gradient { 
+            background: linear-gradient(135deg, #b8860b 0%, #e1ad21 100%); 
+        }
+        
+        /* التدرج الفضي */
+        .silver-border {
+            border: 2px solid;
+            border-image: linear-gradient(to right, #bdc3c7, #2c3e50) 1;
+        }
+
+        .input-style { 
+            background-color: #121212; 
+            border: 1px solid #4a4a4a; /* حدود رمادية تميل للفضي */
+            border-radius: 8px; 
+            padding: 10px; 
+            width: 100%; 
+            color: white; 
+            outline: none; 
+            transition: 0.3s; 
+            text-align: right; 
+        }
+
+        .input-style:focus { 
+            border-color: #e1ad21; /* أصفر عند التركيز */
+            box-shadow: 0 0 8px rgba(225, 173, 33, 0.4); 
+        }
+
+        .card-container {
+            background-color: #111;
+            border: 1px solid #333; /* حدود فضية خافتة */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* لمسة فضية علوية */
+        .card-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #c0c0c0, transparent);
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-auto card-container p-8 rounded-2xl shadow-2xl" style="max-width: 500px;">
+        
+        <div id="form-container">
+            <div id="register-section">
+                <h2 class="text-2xl font-bold mb-2 text-center text-[#e1ad21]">إنشاء حساب جديد</h2>
+                <p class="text-center text-gray-400 text-sm mb-6">انضم إلى عائلة <span class="text-gray-200 font-bold">BurnUp</span></p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="firstName" placeholder="الاسم الأول" class="input-style">
+                    <input type="text" id="lastName" placeholder="الاسم الأخير" class="input-style">
+                </div>
+
+                <div class="mb-4">
+                    <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-style" dir="ltr">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="number" id="height" placeholder="الطول (سم)" class="input-style">
+                    <input type="number" id="weight" placeholder="الوزن (كجم)" class="input-style">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm text-gray-400">مكان التمرين المفضل:</label>
+                    <select id="workoutPlace" class="input-style">
+                        <option value="gym">الجيم (Gym)</option>
+                        <option value="home">البيت (Home)</option>
+                    </select>
+                </div>
+
+                <input type="password" id="regPassword" placeholder="كلمة السر" class="input-style mb-6">
+
+                <button onclick="handleRegister()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">إنشاء حساب</button>
+                
+                <p class="mt-6 text-center text-sm text-gray-400">
+                    لديك حساب بالفعل؟ <button onclick="toggleForm()" class="text-[#e1ad21] hover:text-white transition underline">تسجيل الدخول</button>
+                </p>
+            </div>
+
+            <div id="login-section" class="hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-[#e1ad21]">تسجيل الدخول</h2>
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="input-style mb-4" dir="ltr">
+                <input type="password" id="loginPassword" placeholder="كلمة السر" class="input-style mb-6">
+                
+                <button onclick="handleLogin()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">دخول</button>
+                
+                <p class="mt-6 text-center text-sm text-gray-400">
+                    ليس لديك حساب؟ <button onclick="toggleForm()" class="text-[#e1ad21] hover:text-white transition underline">إنشاء حساب جديد</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            document.getElementById('register-section').classList.toggle('hidden');
+            document.getElementById('login-section').classList.toggle('hidden');
+        }
+
+        function handleRegister() {
+            const email = document.getElementById('regEmail').value.toLowerCase().trim();
+            const password = document.getElementById('regPassword').value;
+            const firstName = document.getElementById('firstName').value;
+
+            if(!email || !password || !firstName) {
+                alert("برجاء ملء كافة البيانات الأساسية");
+                return;
+            }
+
+            if(localStorage.getItem(email)) {
+                alert("هذا البريد الإلكتروني مسجل بالفعل!");
+                return;
+            }
+
+            const userData = {
+                firstName: firstName,
+                email: email,
+                password: password,
+                height: document.getElementById('height').value,
+                weight: document.getElementById('weight').value,
+                workoutPlace: document.getElementById('workoutPlace').value
+            };
+
+            localStorage.setItem(email, JSON.stringify(userData));
+            alert("تم التسجيل بنجاح!");
+            toggleForm();
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.toLowerCase().trim();
+            const pass = document.getElementById('loginPassword').value;
+            const storedUser = localStorage.getItem(email);
+
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                if (user.password === pass) {
+                    alert("أهلاً بك يا " + user.firstName);
+                } else {
+                    alert("كلمة السر غير صحيحة");
+                }
+            } else {
+                alert("الحساب غير موجود");
+            }
+        }
+    </script>
+</body>
+</html>
