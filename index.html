@@ -3,166 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الانضمام | BurnUp</title>
+    <title>BurnUp | منصة اللياقة البدنية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: #050505; /* أسود أعمق */
-            color: #ffffff; 
-        }
-        
-        /* التدرج الأصفر الغامق (الذهبي) */
-        .gold-gradient { 
-            background: linear-gradient(135deg, #b8860b 0%, #e1ad21 100%); 
-        }
-        
-        /* التدرج الفضي */
-        .silver-border {
-            border: 2px solid;
-            border-image: linear-gradient(to right, #bdc3c7, #2c3e50) 1;
-        }
-
-        .input-style { 
-            background-color: #121212; 
-            border: 1px solid #4a4a4a; /* حدود رمادية تميل للفضي */
-            border-radius: 8px; 
-            padding: 10px; 
-            width: 100%; 
-            color: white; 
-            outline: none; 
-            transition: 0.3s; 
-            text-align: right; 
-        }
-
-        .input-style:focus { 
-            border-color: #e1ad21; /* أصفر عند التركيز */
-            box-shadow: 0 0 8px rgba(225, 173, 33, 0.4); 
-        }
-
-        .card-container {
-            background-color: #111;
-            border: 1px solid #333; /* حدود فضية خافتة */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        /* لمسة فضية علوية */
-        .card-container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, #c0c0c0, transparent);
-        }
-
+        body { font-family: 'Cairo', sans-serif; background-color: #050505; color: #ffffff; overflow-x: hidden; }
+        .gold-gradient { background: linear-gradient(135deg, #b8860b 0%, #e1ad21 100%); }
+        .input-style { background-color: #121212; border: 1px solid #4a4a4a; border-radius: 8px; padding: 10px; width: 100%; color: white; outline: none; transition: 0.3s; text-align: right; }
+        .input-style:focus { border-color: #e1ad21; box-shadow: 0 0 8px rgba(225, 173, 33, 0.4); }
+        .card-container { background-color: #111; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .hidden { display: none; }
+        .nav-tab { cursor: pointer; padding: 10px 20px; transition: 0.3s; border-bottom: 2px solid transparent; }
+        .nav-tab.active { color: #e1ad21; border-bottom: 2px solid #e1ad21; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-auto card-container p-8 rounded-2xl shadow-2xl" style="max-width: 500px;">
-        
-        <div id="form-container">
-            <div id="register-section">
-                <h2 class="text-2xl font-bold mb-2 text-center text-[#e1ad21]">إنشاء حساب جديد</h2>
-                <p class="text-center text-gray-400 text-sm mb-6">انضم إلى عائلة <span class="text-gray-200 font-bold">BurnUp</span></p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="text" id="firstName" placeholder="الاسم الأول" class="input-style">
-                    <input type="text" id="lastName" placeholder="الاسم الأخير" class="input-style">
-                </div>
-
-                <div class="mb-4">
-                    <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-style" dir="ltr">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <input type="number" id="height" placeholder="الطول (سم)" class="input-style">
-                    <input type="number" id="weight" placeholder="الوزن (كجم)" class="input-style">
-                </div>
-
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm text-gray-400">مكان التمرين المفضل:</label>
-                    <select id="workoutPlace" class="input-style">
-                        <option value="gym">الجيم (Gym)</option>
-                        <option value="home">البيت (Home)</option>
-                    </select>
-                </div>
-
-                <input type="password" id="regPassword" placeholder="كلمة السر" class="input-style mb-6">
-
-                <button onclick="handleRegister()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">إنشاء حساب</button>
-                
-                <p class="mt-6 text-center text-sm text-gray-400">
-                    لديك حساب بالفعل؟ <button onclick="toggleForm()" class="text-[#e1ad21] hover:text-white transition underline">تسجيل الدخول</button>
-                </p>
+    <div id="auth-wrapper" class="w-full max-w-[500px] card-container p-8 rounded-2xl shadow-2xl">
+        <div id="register-section">
+            <h2 class="text-2xl font-bold mb-2 text-center text-[#e1ad21]">إنشاء حساب جديد</h2>
+            <p class="text-center text-gray-400 text-sm mb-6">انضم إلى عائلة <span class="text-gray-200 font-bold">BurnUp</span></p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <input type="text" id="firstName" placeholder="الاسم الأول" class="input-style">
+                <input type="text" id="lastName" placeholder="الاسم الأخير" class="input-style">
             </div>
 
-            <div id="login-section" class="hidden">
-                <h2 class="text-2xl font-bold mb-6 text-center text-[#e1ad21]">تسجيل الدخول</h2>
-                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="input-style mb-4" dir="ltr">
-                <input type="password" id="loginPassword" placeholder="كلمة السر" class="input-style mb-6">
-                
-                <button onclick="handleLogin()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">دخول</button>
-                
-                <p class="mt-6 text-center text-sm text-gray-400">
-                    ليس لديك حساب؟ <button onclick="toggleForm()" class="text-[#e1ad21] hover:text-white transition underline">إنشاء حساب جديد</button>
-                </p>
+            <div class="mb-4">
+                <input type="email" id="regEmail" placeholder="البريد الإلكتروني" class="input-style" dir="ltr">
             </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <input type="number" id="height" placeholder="الطول (سم)" class="input-style">
+                <input type="number" id="weight" placeholder="الوزن (كجم)" class="input-style">
+            </div>
+
+            <div class="mb-4 relative">
+                <input type="password" id="regPassword" placeholder="كلمة السر (8+ رموز، حرفين)" class="input-style">
+                <i class="fas fa-eye absolute left-3 top-3 cursor-pointer text-gray-500" onclick="togglePass('regPassword')"></i>
+            </div>
+
+            <button onclick="handleRegister()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">إنشاء حساب</button>
+            
+            <p class="mt-6 text-center text-sm text-gray-400">
+                لديك حساب بالفعل؟ <button onclick="toggleForm()" class="text-[#e1ad21] underline">تسجيل الدخول</button>
+            </p>
+        </div>
+
+        <div id="login-section" class="hidden">
+            <h2 class="text-2xl font-bold mb-6 text-center text-[#e1ad21]">تسجيل الدخول</h2>
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="input-style mb-4" dir="ltr">
+            <div class="relative mb-6">
+                <input type="password" id="loginPassword" placeholder="كلمة السر" class="input-style">
+                <i class="fas fa-eye absolute left-3 top-3 cursor-pointer text-gray-500" onclick="togglePass('loginPassword')"></i>
+            </div>
+            <button onclick="handleLogin()" class="w-full py-3 rounded-lg font-bold text-black gold-gradient hover:brightness-110 transition shadow-lg">دخول</button>
+            <p class="mt-6 text-center text-sm text-gray-400">
+                ليس لديك حساب؟ <button onclick="toggleForm()" class="text-[#e1ad21] underline">إنشاء حساب جديد</button>
+            </p>
+        </div>
+    </div>
+
+    <div id="main-platform" class="hidden w-full max-w-6xl min-h-[80vh] bg-[#111] rounded-3xl p-6 border border-gray-800">
+        <header class="flex justify-between items-center border-b border-gray-800 pb-4 mb-6">
+            <h1 class="text-2xl font-bold text-[#e1ad21]">BurnUp Platform</h1>
+            <div class="flex gap-4">
+                <span id="userNameDisplay" class="text-gray-300"></span>
+                <button onclick="location.reload()" class="text-red-500 text-sm">خروج</button>
+            </div>
+        </header>
+
+        <nav class="flex gap-6 mb-8 overflow-x-auto">
+            <div class="nav-tab active" onclick="showTab('home')">الرئيسية</div>
+            <div class="nav-tab" onclick="showTab('workout')">التمارين</div>
+            <div class="nav-tab" onclick="showTab('diet')">النظام الغذائي</div>
+            <div class="nav-tab" onclick="showTab('calc')">حاسبة السعرات</div>
+        </nav>
+
+        <div id="content-area">
+            <section id="home-tab">
+                <h3 class="text-xl mb-4">أهلاً بك في رحلة التغيير!</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-[#1a1a1a] p-6 rounded-xl border border-gray-700">
+                        <h4 class="text-[#e1ad21] mb-2">الخطط الأسبوعية</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between p-2 bg-black rounded"><span>السبت</span><span class="text-xs text-green-500">تمارين صدر</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الأحد</span><span class="text-xs text-green-500">تمارين ظهر</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الاثنين</span><span class="text-xs text-yellow-500">راحة</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الثلاثاء</span><span class="text-xs text-green-500">أرجل</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الأربعاء</span><span class="text-xs text-green-500">كتف</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الخميس</span><span class="text-xs text-green-500">ذراع</span></div>
+                            <div class="flex justify-between p-2 bg-black rounded"><span>الجمعة</span><span class="text-xs text-yellow-500">راحة</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="workout-tab" class="hidden text-center py-10">
+                <i class="fas fa-dumbbell text-5xl text-[#e1ad21] mb-4"></i>
+                <p>قائمة التمارين المخصصة لك ستظهر هنا بناءً على مستواك.</p>
+            </section>
+
+            <section id="diet-tab" class="hidden text-center py-10">
+                <i class="fas fa-utensils text-5xl text-[#e1ad21] mb-4"></i>
+                <p>جاري تجهيز وجباتك الصحية المفضلة...</p>
+            </section>
+
+            <section id="calc-tab" class="hidden">
+                <div class="max-w-md mx-auto bg-[#1a1a1a] p-6 rounded-xl">
+                    <h3 class="mb-4 text-center">حساب السعرات (BMR)</h3>
+                    <input type="number" id="calcAge" placeholder="العمر" class="input-style mb-4">
+                    <button onclick="calculateCalories()" class="w-full py-2 gold-gradient rounded text-black font-bold">احسب الآن</button>
+                    <div id="calcResult" class="mt-4 text-center text-[#e1ad21] font-bold"></div>
+                </div>
+            </section>
         </div>
     </div>
 
     <script>
+        // تبديل إظهار كلمة السر
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
         function toggleForm() {
             document.getElementById('register-section').classList.toggle('hidden');
             document.getElementById('login-section').classList.toggle('hidden');
         }
 
+        // التحقق من البريد
+        function validateEmail(email) {
+            return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        }
+
+        // التحقق من قوة كلمة المرور
+        function validatePass(pass) {
+            const hasTwoLetters = (pass.match(/[a-zA-Z]/g) || []).length >= 2;
+            return pass.length >= 8 && hasTwoLetters;
+        }
+
         function handleRegister() {
             const email = document.getElementById('regEmail').value.toLowerCase().trim();
-            const password = document.getElementById('regPassword').value;
+            const pass = document.getElementById('regPassword').value;
             const firstName = document.getElementById('firstName').value;
 
-            if(!email || !password || !firstName) {
-                alert("برجاء ملء كافة البيانات الأساسية");
-                return;
-            }
-
-            if(localStorage.getItem(email)) {
-                alert("هذا البريد الإلكتروني مسجل بالفعل!");
-                return;
-            }
+            if(!validateEmail(email)) return alert("يرجى إدخال بريد إلكتروني صحيح");
+            if(!validatePass(pass)) return alert("كلمة السر ضعيفة! يجب أن تكون 8 رموز على الأقل وتحتوي على حرفين.");
+            if(!firstName) return alert("يرجى إدخال اسمك");
 
             const userData = {
-                firstName: firstName,
-                email: email,
-                password: password,
-                height: document.getElementById('height').value,
+                firstName, email, password: pass,
                 weight: document.getElementById('weight').value,
-                workoutPlace: document.getElementById('workoutPlace').value
+                height: document.getElementById('height').value
             };
 
             localStorage.setItem(email, JSON.stringify(userData));
-            alert("تم التسجيل بنجاح!");
-            toggleForm();
+            alert("تم إنشاء حسابك بنجاح!");
+            startPlatform(userData);
         }
 
         function handleLogin() {
             const email = document.getElementById('loginEmail').value.toLowerCase().trim();
             const pass = document.getElementById('loginPassword').value;
-            const storedUser = localStorage.getItem(email);
+            const storedUser = JSON.parse(localStorage.getItem(email));
 
-            if (storedUser) {
-                const user = JSON.parse(storedUser);
-                if (user.password === pass) {
-                    alert("أهلاً بك يا " + user.firstName);
-                } else {
-                    alert("كلمة السر غير صحيحة");
-                }
+            if (storedUser && storedUser.password === pass) {
+                startPlatform(storedUser);
             } else {
-                alert("الحساب غير موجود");
+                alert("البيانات غير صحيحة");
             }
+        }
+
+        function startPlatform(user) {
+            document.getElementById('auth-wrapper').classList.add('hidden');
+            document.getElementById('main-platform').classList.remove('hidden');
+            document.getElementById('userNameDisplay').innerText = "مرحباً، " + user.firstName;
+        }
+
+        function showTab(tabName) {
+            // إخفاء الكل
+            ['home', 'workout', 'diet', 'calc'].forEach(t => {
+                document.getElementById(t + '-tab').classList.add('hidden');
+            });
+            // إزالة النشط من الأزرار
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            
+            // إظهار المطلوب
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            event.currentTarget.classList.add('active');
+        }
+
+        function calculateCalories() {
+            const age = document.getElementById('calcAge').value;
+            if(!age) return alert("أدخل العمر");
+            // معادلة تقريبية بسيطة للتوضيح
+            const res = 2000 + (parseInt(age) * 5); 
+            document.getElementById('calcResult').innerText = `تحتاج تقريباً إلى ${res} سعرة حرارية`;
         }
     </script>
 </body>
